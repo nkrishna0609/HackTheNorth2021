@@ -1,17 +1,20 @@
 # pip install google.cloud
 
-import os, io, re, datetime
+import os, io, re, datetime, requests
 import string
 from google.cloud import vision
+from PIL import Image
+
 
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r"creds.json"
 
-regex_types = [ (0, "([a-zA-Z]{2}[0-9]{2})"),             # JA10
-                (1, "([a-zA-Z]{2} [0-9]{2})"),            # JA 10
-                (2, "([0-9]{2}[a-zA-Z]{2}[0-9]{2})"),     # 21JA10
-                (3, "([0-9]{2} [a-zA-Z]{2} [0-9]{2})"),   # 21 JA 10
-                (4, "([0-9]{4}[a-zA-Z]{2}[0-9]{2})"),     # 2021JA10
+regex_types = [ 
                 (5, "([0-9]{4} [a-zA-Z]{2} [0-9]{2})"),   # 2021 JA 10
+                (4, "([0-9]{4}[a-zA-Z]{2}[0-9]{2})"),     # 2021JA10
+                (3, "([0-9]{2} [a-zA-Z]{2} [0-9]{2})"),   # 21 JA 10
+                (2, "([0-9]{2}[a-zA-Z]{2}[0-9]{2})"),     # 21JA10
+                (1, "([a-zA-Z]{2} [0-9]{2})"),            # JA 10
+                (0, "([a-zA-Z]{2}[0-9]{2})"),             # JA10
                 ]
 
 month_abbreviations = { "JA":1, "FE":2, "MR":3, 
@@ -19,16 +22,14 @@ month_abbreviations = { "JA":1, "FE":2, "MR":3,
                         "JL":7, "AU":8, "SE":9, 
                         "OC":10,"NO":11,"DE":12}
 
-def detect_text(path):
-    """Detects text in the file."""
+def detect_text(url):
     client = vision.ImageAnnotatorClient()
-
-    with io.open(path, 'rb') as image_file:
-        content = image_file.read()
-
-    image = vision.Image(content=content)
+    
+    image = vision.Image()
+    image.source.image_uri = url
 
     response = client.text_detection(image=image)
+
     texts = response.text_annotations
 
     if response.error.message:
@@ -36,7 +37,6 @@ def detect_text(path):
             '{}\nFor more info on error messages, check: '
             'https://cloud.google.com/apis/design/errors'.format(
                 response.error.message))
-    # print(texts[0].description)
     return(texts[0].description)
 
 def filter_text(ocr_str):
@@ -70,14 +70,9 @@ def convert_to_date(matched_str, mode):
 
     except KeyError as e:
         return "whoops that didnt work did it"
-        
-text, mode = filter_text(detect_text("imgs/img_0.jpg"))
-print(convert_to_date(text,mode))
-text, mode = filter_text(detect_text("imgs/img_1.jpg"))
-print(convert_to_date(text,mode))
-text, mode = filter_text(detect_text("imgs/img_2.jpg"))
-print(convert_to_date(text,mode))
-text, mode = filter_text(detect_text("imgs/img_3.jpg"))
-print(convert_to_date(text,mode))
-text, mode = filter_text(detect_text("imgs/img_4.jpg"))
-print(convert_to_date(text,mode))
+
+def run_ocr(url):
+    text, mode = filter_text(detect_text(url))
+    print(convert_to_date(text,mode))
+
+run_ocr("https://storage.googleapis.com/htn_expiry_date_bucket/img_3.jpg")
