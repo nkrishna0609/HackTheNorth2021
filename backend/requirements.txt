@@ -1,0 +1,7 @@
+Flask==1.1.2
+google-cloud==0.34.0
+google-cloud-vision==2.0.0
+nexmo==2.5.2
+psycopg2==2.8.6
+requests==2.23.0
+selenium==3.141.0
