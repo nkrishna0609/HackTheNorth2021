@@ -1,4 +1,4 @@
 *.code-workspace
 creds.json
-db_creds.json
+# db_creds.json
 *.crt

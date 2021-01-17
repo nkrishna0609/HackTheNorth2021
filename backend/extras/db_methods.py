@@ -1,16 +1,21 @@
 import psycopg2, json
 from psycopg2.extras import DictCursor
-
 # Connect to Database
-with open('creds.json', 'r') as f:
+with open('./extras/db_creds.json', 'r') as f:
     creds = json.load(f)
 
-connection_string = "postgres://"+creds['username']+":"+creds['password']+"@"+creds['url']+"?sslmode=verify-full&sslrootcert=./htn-cockroach-ca.crt"
+connection_string = "postgres://"+creds['username']+":"+creds['password']+"@"+creds['url']+"?sslmode=verify-full&sslrootcert=extras/htn-cockroach-ca.crt"
 conn = psycopg2.connect(connection_string)
 
 print("connected to", creds['url'])
 
-def get_all_user_items(username, conn):
+def get_all_users():
+    cur = conn.cursor(cursor_Factory=DictCursor)
+    cur.execute('SELECT * FROM users;')
+    userList = cur.fetchall()
+    return userList
+
+def get_all_user_items(username):
     cur = conn.cursor(cursor_factory=DictCursor)
     params = {'username': username}
     data = []
@@ -29,7 +34,7 @@ def get_all_user_items(username, conn):
         data.append(tempData)
     return(str(data).replace("'",'"'))
 
-def add_item(conn, product_name, username, add_date, exp_date, preview_img_url):
+def add_item(product_name, username, add_date, exp_date, preview_img_url):
     cur = conn.cursor()
     params = {
         'product_name':product_name,
@@ -41,7 +46,7 @@ def add_item(conn, product_name, username, add_date, exp_date, preview_img_url):
     cur.execute('INSERT INTO items VALUES (gen_random_uuid (), %(product_name)s, %(username)s, %(add_date)s, %(exp_date)s, %(preview_img_url)s);', params)
     conn.commit()
 
-def delete_item(conn, p_id):
+def delete_item(p_id):
     cur = conn.cursor()
     params = {"id":p_id}
     cur.execute("DELETE FROM items WHERE id=%(id)s;", params)

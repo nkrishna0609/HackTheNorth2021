@@ -6,7 +6,7 @@ from google.cloud import vision
 from PIL import Image
 
 
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r"creds.json"
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r"extras/creds.json"
 
 regex_types = [ 
                 (5, "([0-9]{4} [a-zA-Z]{2} [0-9]{2})"),   # 2021 JA 10
