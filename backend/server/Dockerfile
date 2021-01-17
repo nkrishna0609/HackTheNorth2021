@@ -16,11 +16,12 @@ RUN pip install -r requirements.txt
 COPY . /opt/app
 
 # 5 Copy Server Files
-COPY src/ /app
-WORKDIR /app
+ENV APP_HOME /app
+WORKDIR $APP_HOME
+COPY . .
 
 # 6 Bind Port
 ENV PORT 8080
 
 # 7 Run Gunicorn with Flask Worker
-CMD exec gunicorn --bind :$PORT --workers 2 --threads 8 app:app
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 main:app

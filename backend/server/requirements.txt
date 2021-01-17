@@ -7,6 +7,7 @@ psycopg2==2.8.6
 requests==2.23.0
 selenium==3.141.0
 webdriver-manager==3.2.2
+chromedriver-binary==77.0.3865.40.0
 gunicorn
 Pillow
 requests
