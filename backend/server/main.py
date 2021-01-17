@@ -1,6 +1,6 @@
-import datetime
+import datetime, time, os
 from datetime import datetime
-from flask import Flask, request
+from flask import Flask, request, render_template
 
 from extras.ocr import run_ocr
 from extras.imageRetrieval import get_image
@@ -9,6 +9,15 @@ from extras.smsReminder import smsRemind
 from extras.name_retrieval import get_product_from_barcode
 
 app = Flask(__name__)
+
+def format_server_time():
+  server_time = time.localtime()
+  return time.strftime("%I:%M:%S %p", server_time)
+
+@app.route('/')
+def index():
+    context = { 'server_time': format_server_time() }
+    return render_template('index.html', context=context)
 
 @app.route('/uploadItem', methods=['POST'])
 def uploadItem():
@@ -58,5 +67,5 @@ def checkEveryItemForEveryUser():
                 
         smsRemind(username, expiredList, timeUntilExp.days)
 
-if __name__ == "__main__":
-    app.run(debug=True)
+# if __name__ == '__main__':
+#     app.run(debug=True,host='0.0.0.0',port=int(os.environ.get('PORT', 8080)))

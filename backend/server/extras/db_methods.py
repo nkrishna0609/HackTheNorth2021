@@ -2,10 +2,10 @@ import psycopg2, json
 from psycopg2.extras import DictCursor
 from requests.api import get
 # Connect to Database
-with open('db_creds.json', 'r') as f:
+with open('./extras/db_creds.json', 'r') as f:
     creds = json.load(f)
 
-connection_string = "postgres://"+creds['username']+":"+creds['password']+"@"+creds['url']+"?sslmode=verify-full&sslrootcert=htn-cockroach-ca.crt"
+connection_string = "postgres://"+creds['username']+":"+creds['password']+"@"+creds['url']+"?sslmode=verify-full&sslrootcert=./extras/htn-cockroach-ca.crt"
 conn = psycopg2.connect(connection_string)
 
 print("connected to", creds['url'])
@@ -55,6 +55,3 @@ def delete_item(p_id):
     params = {"id":p_id}
     cur.execute("DELETE FROM items WHERE id=%(id)s;", params)
     conn.commit()
-
-
-print(get_all_users())

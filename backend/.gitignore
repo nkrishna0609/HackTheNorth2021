@@ -3,3 +3,5 @@ creds.json
 db_creds.json
 vonage_creds.json
 *.crt
+vonage_creds.json
+node_modules/

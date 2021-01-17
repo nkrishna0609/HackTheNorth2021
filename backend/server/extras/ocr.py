@@ -1,12 +1,10 @@
 # pip install google.cloud
 
-import os, io, re, datetime, requests
-import string
+import os, re, datetime
 from google.cloud import vision
-from PIL import Image
 
 
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r"extras/creds.json"
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r"./extras/creds.json"
 
 regex_types = [ 
                 (5, "([0-9]{4} [a-zA-Z]{2} [0-9]{2})"),   # 2021 JA 10
@@ -46,7 +44,7 @@ def filter_text(ocr_str):
             return(match.group(0), i[0])
 
 def convert_to_date(matched_str, mode):
-    matched_str=matched_str.replace(" ", "")
+    matched_str=matched_str.replace(" ", "").replace("/"," ")
     year = ""
     month = ""
     day = ""
