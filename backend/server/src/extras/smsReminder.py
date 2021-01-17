@@ -1,6 +1,4 @@
 import nexmo, json
-import datetime
-from datetime import datetime
 
 with open('./extras/vonage_creds.json', 'r') as f:
     creds = json.load(f)
@@ -14,7 +12,7 @@ def smsRemind(name, productList, daysUntilExp):
     text = 'Hello from ShelfLife! The following item(s) will expire soon:' + listToString
     
     client.send_message({
-        'from': '14036687449',
+        'from': '12492664009',
         'to': str(name),
         'text': text,
     })
