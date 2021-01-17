@@ -43,7 +43,7 @@ def checkEveryItemForEveryUser():
     for user in userList:
         username = user['username']
         userItems = get_all_user_items(user)
-        expiredList=[]
+        expiredList=[tuple()]
         for item in userItems:
             
             product_name = item['product_name']
@@ -54,9 +54,9 @@ def checkEveryItemForEveryUser():
             timeUntilExp = exp_date - today
 
             if (timeUntilExp.days == 3 or timeUntilExp.days == 1):
-                expiredList.append(product_name)
+                expiredList.append((product_name,expiry_date))
                 
-        smsRemind(username, username, expiredList, timeUntilExp.days)
+        smsRemind(username, expiredList, timeUntilExp.days)
 
 if __name__ == "__main__":
     app.run(debug=True)

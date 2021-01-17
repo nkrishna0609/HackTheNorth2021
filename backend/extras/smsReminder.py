@@ -9,10 +9,12 @@ with open('./extras/vonage_creds.json', 'r') as f:
 client = nexmo.Client(key=creds['key'], secret=creds['secret'])
 
 def smsRemind(name, productList, daysUntilExp):
-    entireStringOfProducts=",".join(productList)
+    listToString=','.join("%s - %s days" & tup for tup in productList)
+    
+    text = 'Hello from ShelfLife! The following item(s) will expire soon:' + listToString
     
     client.send_message({
         'from': '14036687449',
         'to': str(name),
-        'text': 'Hello from ShelfLife! The following item(s) will expire soon:' + str(daysUntilExp) + ' day(s): ' + entireStringOfProducts,
+        'text': text,
     })
