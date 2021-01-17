@@ -1,9 +1,12 @@
-import nexmo
+import nexmo, json
 import datetime
 from datetime import datetime
 
+with open('./extras/vonage_creds.json', 'r') as f:
+    creds = json.load(f)
+
 #Vonage API Credentials
-client = nexmo.Client(key='0d4d7610', secret='zLAyx80JXXbjY09k')
+client = nexmo.Client(key=creds['key'], secret=creds['secret'])
 
 def smsRemind(name, phoneNum, productList, daysUntilExp):
     entireStringOfProducts=",".join(productList)
