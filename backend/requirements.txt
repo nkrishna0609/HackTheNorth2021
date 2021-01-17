@@ -6,4 +6,4 @@ nexmo==2.5.2
 psycopg2==2.8.6
 requests==2.23.0
 selenium==3.141.0
-webdriver_manager==0.4.3
+webdriver-manager==3.2.2
