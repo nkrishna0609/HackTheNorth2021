@@ -68,11 +68,9 @@ def convert_to_date(matched_str, mode):
         date = datetime.datetime(int(year), month_int, int(day))
         return date
 
-    except KeyError as e:
+    except KeyError:
         return "whoops that didnt work did it"
 
 def run_ocr(url):
     text, mode = filter_text(detect_text(url))
-    print(convert_to_date(text,mode))
-
-run_ocr("https://storage.googleapis.com/htn_expiry_date_bucket/img_3.jpg")
+    return(convert_to_date(text,mode).date())
