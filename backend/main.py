@@ -6,6 +6,7 @@ from extras.ocr import run_ocr
 from extras.imageRetrieval import get_image
 from extras.db_methods import get_all_user_items, add_item, delete_item, get_all_users
 from extras.smsReminder import smsRemind
+from extras.name_retrieval import get_product_from_barcode
 
 app = Flask(__name__)
 
@@ -13,12 +14,12 @@ app = Flask(__name__)
 def uploadItem():
     reqJson = request.get_json(force=True)
     srcLink = reqJson['src_img']
-    product_name = reqJson['barcode_text']
     username = reqJson['username']
     
     exp_date = run_ocr(srcLink)
     add_date = datetime.today().strftime('%Y-%m-%d')
 
+    product_name = get_product_from_barcode(reqJson['barcode_text'])
     preview_img_url = get_image(product_name)
 
     add_item(product_name, username, add_date, exp_date, preview_img_url)
